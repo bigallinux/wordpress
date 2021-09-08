@@ -273,7 +273,7 @@ class Redirector {
 	 * Do the fallback strategy here.
 	 */
 	private function fallback() {
-		$wp_redirect_admin_locations = [ 'login', 'admin', 'dashboard' ];
+		$wp_redirect_admin_locations = $this->do_filter( 'redirection/fallback_exclude_locations', [ 'login', 'admin', 'dashboard' ] );
 
 		if ( ! is_404() || in_array( $this->uri, $wp_redirect_admin_locations, true ) ) {
 			return;
@@ -408,7 +408,7 @@ class Redirector {
 	 * @return string
 	 */
 	private function get_redirect_header() {
-		return true === $this->do_filter( 'redirection/add_redirect_header', true ) ? 'Rank Math SEO' : 'WordPress';
+		return true === $this->do_filter( 'redirection/add_redirect_header', true ) ? 'Rank Math' : 'WordPress';
 	}
 
 	/**
