@@ -1,0 +1,15 @@
+/*  MICROTHEMER STYLES  */
+
+
+/*= Menu principal ============ */
+
+/** Menu principal >> #post-22 .uagb-rm__title-wrap **/
+#post-22 .uagb-rm__title-wrap {
+	width: 270px !important;
+}
+
+/** Menu principal >> #post-22 .uagb-rm__price **/
+#post-22 .uagb-rm__price {
+	width: 120px !important;
+}
+
