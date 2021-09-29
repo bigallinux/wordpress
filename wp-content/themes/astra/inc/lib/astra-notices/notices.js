@@ -4,7 +4,7 @@
  * @package Astra
  */
 
- ( function( $ ) {
+( function( $ ) {
 
 	/**
 	 * Helper class for the main Customizer interface.
@@ -70,7 +70,7 @@
 		},
 
 		_ajax: function( notice_id, repeat_notice_after ) {
-
+			
 			if( '' === notice_id ) {
 				return;
 			}
