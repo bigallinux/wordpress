@@ -119,7 +119,7 @@ var subscribe = function subscribe(value, next) {
   return true;
 };
 
-exports.default = [promise, fork, join, race, subscribe];
+exports["default"] = [promise, fork, join, race, subscribe];
 
 /***/ }),
 
@@ -219,7 +219,7 @@ var iterator = exports.iterator = function iterator(value, next, rungen, yieldNe
   return true;
 };
 
-exports.default = [error, iterator, array, object, any];
+exports["default"] = [error, iterator, array, object, any];
 
 /***/ }),
 
@@ -261,7 +261,7 @@ var cps = exports.cps = function cps(value, next, rungen, yieldNext, raiseNext) 
   return true;
 };
 
-exports.default = [call, cps];
+exports["default"] = [call, cps];
 
 /***/ }),
 
@@ -346,7 +346,7 @@ var create = function create() {
   return runtime;
 };
 
-exports.default = create;
+exports["default"] = create;
 
 /***/ }),
 
@@ -420,7 +420,7 @@ var createDispatcher = function createDispatcher() {
   };
 };
 
-exports.default = createDispatcher;
+exports["default"] = createDispatcher;
 
 /***/ }),
 
@@ -434,7 +434,7 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 exports.createChannel = exports.subscribe = exports.cps = exports.apply = exports.call = exports.invoke = exports.delay = exports.race = exports.join = exports.fork = exports.error = exports.all = undefined;
 
-var _keys = __webpack_require__(8786);
+var _keys = __webpack_require__(1309);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -575,7 +575,7 @@ Object.defineProperty(exports, "__esModule", ({
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var _keys = __webpack_require__(8786);
+var _keys = __webpack_require__(1309);
 
 var _keys2 = _interopRequireDefault(_keys);
 
@@ -624,11 +624,11 @@ var is = {
   }
 };
 
-exports.default = is;
+exports["default"] = is;
 
 /***/ }),
 
-/***/ 8786:
+/***/ 1309:
 /***/ (function(__unused_webpack_module, exports) {
 
 
@@ -647,7 +647,7 @@ var keys = {
   subscribe: Symbol('subscribe')
 };
 
-exports.default = keys;
+exports["default"] = keys;
 
 /***/ })
 
@@ -785,7 +785,9 @@ function isActionOfType(object, expectedType) {
  * @param  dispatch Unhandled action dispatch.
  */
 
-function createRuntime(controls = {}, dispatch) {
+function createRuntime() {
+  let controls = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let dispatch = arguments.length > 1 ? arguments[1] : undefined;
   const rungenControls = (0,external_lodash_namespaceObject.map)(controls, (control, actionType) => (value, next, iterate, yieldNext, yieldError) => {
     if (!isActionOfType(value, actionType)) {
       return false;
@@ -843,7 +845,8 @@ function createRuntime(controls = {}, dispatch) {
  * @return {import('redux').Middleware} Co-routine runtime
  */
 
-function createMiddleware(controls = {}) {
+function createMiddleware() {
+  let controls = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   return store => {
     const runtime = createRuntime(controls, store.dispatch);
     return next => action => {
@@ -857,6 +860,6 @@ function createMiddleware(controls = {}) {
 }
 //# sourceMappingURL=index.js.map
 }();
-(window.wp = window.wp || {}).reduxRoutine = __webpack_exports__.default;
+(window.wp = window.wp || {}).reduxRoutine = __webpack_exports__["default"];
 /******/ })()
 ;

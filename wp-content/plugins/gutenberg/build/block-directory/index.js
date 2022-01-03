@@ -83,6 +83,13 @@ __webpack_require__.d(actions_namespaceObject, {
   "uninstallBlockType": function() { return uninstallBlockType; }
 });
 
+// NAMESPACE OBJECT: ./packages/block-directory/build-module/store/resolvers.js
+var resolvers_namespaceObject = {};
+__webpack_require__.r(resolvers_namespaceObject);
+__webpack_require__.d(resolvers_namespaceObject, {
+  "getDownloadableBlocks": function() { return resolvers_getDownloadableBlocks; }
+});
+
 ;// CONCATENATED MODULE: external ["wp","element"]
 var external_wp_element_namespaceObject = window["wp"]["element"];
 ;// CONCATENATED MODULE: external ["wp","plugins"]
@@ -95,8 +102,6 @@ var external_wp_blocks_namespaceObject = window["wp"]["blocks"];
 var external_wp_data_namespaceObject = window["wp"]["data"];
 ;// CONCATENATED MODULE: external ["wp","editor"]
 var external_wp_editor_namespaceObject = window["wp"]["editor"];
-;// CONCATENATED MODULE: external ["wp","dataControls"]
-var external_wp_dataControls_namespaceObject = window["wp"]["dataControls"];
 ;// CONCATENATED MODULE: external "lodash"
 var external_lodash_namespaceObject = window["lodash"];
 ;// CONCATENATED MODULE: ./packages/block-directory/build-module/store/reducer.js
@@ -118,7 +123,10 @@ var external_lodash_namespaceObject = window["lodash"];
  * @return {Object} Updated state.
  */
 
-const downloadableBlocks = (state = {}, action) => {
+const downloadableBlocks = function () {
+  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let action = arguments.length > 1 ? arguments[1] : undefined;
+
   switch (action.type) {
     case 'FETCH_DOWNLOADABLE_BLOCKS':
       return { ...state,
@@ -147,10 +155,13 @@ const downloadableBlocks = (state = {}, action) => {
  * @return {Object} Updated state.
  */
 
-const blockManagement = (state = {
-  installedBlockTypes: [],
-  isInstalling: {}
-}, action) => {
+const blockManagement = function () {
+  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+    installedBlockTypes: [],
+    isInstalling: {}
+  };
+  let action = arguments.length > 1 ? arguments[1] : undefined;
+
   switch (action.type) {
     case 'ADD_INSTALLED_BLOCK_TYPE':
       return { ...state,
@@ -181,7 +192,10 @@ const blockManagement = (state = {
  * @return {Object} Updated state.
  */
 
-const errorNotices = (state = {}, action) => {
+const errorNotices = function () {
+  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let action = arguments.length > 1 ? arguments[1] : undefined;
+
   switch (action.type) {
     case 'SET_ERROR_NOTICE':
       return { ...state,
@@ -215,14 +229,19 @@ var external_wp_blockEditor_namespaceObject = window["wp"]["blockEditor"];
  *
  * @return {boolean} Whether the blockType is found.
  */
-function hasBlockType(blockType, blocks = []) {
+function hasBlockType(blockType) {
+  let blocks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
   if (!blocks.length) {
     return false;
   }
 
-  if (blocks.some(({
-    name
-  }) => name === blockType.name)) {
+  if (blocks.some(_ref => {
+    let {
+      name
+    } = _ref;
+    return name === blockType.name;
+  })) {
     return true;
   }
 
@@ -256,11 +275,9 @@ function hasBlockType(blockType, blocks = []) {
  */
 
 function isRequestingDownloadableBlocks(state, filterValue) {
-  if (!state.downloadableBlocks[filterValue] || !state.downloadableBlocks[filterValue].isRequesting) {
-    return false;
-  }
+  var _state$downloadableBl, _state$downloadableBl2;
 
-  return state.downloadableBlocks[filterValue].isRequesting;
+  return (_state$downloadableBl = (_state$downloadableBl2 = state.downloadableBlocks[filterValue]) === null || _state$downloadableBl2 === void 0 ? void 0 : _state$downloadableBl2.isRequesting) !== null && _state$downloadableBl !== void 0 ? _state$downloadableBl : false;
 }
 /**
  * Returns the available uninstalled blocks.
@@ -272,11 +289,9 @@ function isRequestingDownloadableBlocks(state, filterValue) {
  */
 
 function getDownloadableBlocks(state, filterValue) {
-  if (!state.downloadableBlocks[filterValue] || !state.downloadableBlocks[filterValue].results) {
-    return [];
-  }
+  var _state$downloadableBl3, _state$downloadableBl4;
 
-  return state.downloadableBlocks[filterValue].results;
+  return (_state$downloadableBl3 = (_state$downloadableBl4 = state.downloadableBlocks[filterValue]) === null || _state$downloadableBl4 === void 0 ? void 0 : _state$downloadableBl4.results) !== null && _state$downloadableBl3 !== void 0 ? _state$downloadableBl3 : [];
 }
 /**
  * Returns the block types that have been installed on the server in this
@@ -356,12 +371,12 @@ function getErrorNoticeForBlock(state, blockId) {
 //# sourceMappingURL=selectors.js.map
 ;// CONCATENATED MODULE: external ["wp","i18n"]
 var external_wp_i18n_namespaceObject = window["wp"]["i18n"];
-;// CONCATENATED MODULE: external ["wp","notices"]
-var external_wp_notices_namespaceObject = window["wp"]["notices"];
 ;// CONCATENATED MODULE: external ["wp","apiFetch"]
 var external_wp_apiFetch_namespaceObject = window["wp"]["apiFetch"];
 var external_wp_apiFetch_default = /*#__PURE__*/__webpack_require__.n(external_wp_apiFetch_namespaceObject);
-;// CONCATENATED MODULE: ./packages/block-directory/build-module/store/controls.js
+;// CONCATENATED MODULE: external ["wp","notices"]
+var external_wp_notices_namespaceObject = window["wp"]["notices"];
+;// CONCATENATED MODULE: ./packages/block-directory/build-module/store/load-assets.js
 /**
  * WordPress dependencies
  */
@@ -407,47 +422,33 @@ const loadAsset = el => {
 };
 /**
  * Load the asset files for a block
- *
- * @param {Array} assets A collection of URLs for the assets.
- *
- * @return {Object} Control descriptor.
  */
 
-function loadAssets(assets) {
-  return {
-    type: 'LOAD_ASSETS',
-    assets
-  };
-}
-const controls = {
-  async LOAD_ASSETS() {
-    /*
-     * Fetch the current URL (post-new.php, or post.php?post=1&action=edit) and compare the
-     * JavaScript and CSS assets loaded between the pages. This imports the required assets
-     * for the block into the current page while not requiring that we know them up-front.
-     * In the future this can be improved by reliance upon block.json and/or a script-loader
-     * dependency API.
-     */
-    const response = await external_wp_apiFetch_default()({
-      url: document.location.href,
-      parse: false
-    });
-    const data = await response.text();
-    const doc = new window.DOMParser().parseFromString(data, 'text/html');
-    const newAssets = Array.from(doc.querySelectorAll('link[rel="stylesheet"],script')).filter(asset => asset.id && !document.getElementById(asset.id));
-    /*
-     * Load each asset in order, as they may depend upon an earlier loaded script.
-     * Stylesheets and Inline Scripts will resolve immediately upon insertion.
-     */
+async function loadAssets() {
+  /*
+   * Fetch the current URL (post-new.php, or post.php?post=1&action=edit) and compare the
+   * JavaScript and CSS assets loaded between the pages. This imports the required assets
+   * for the block into the current page while not requiring that we know them up-front.
+   * In the future this can be improved by reliance upon block.json and/or a script-loader
+   * dependency API.
+   */
+  const response = await external_wp_apiFetch_default()({
+    url: document.location.href,
+    parse: false
+  });
+  const data = await response.text();
+  const doc = new window.DOMParser().parseFromString(data, 'text/html');
+  const newAssets = Array.from(doc.querySelectorAll('link[rel="stylesheet"],script')).filter(asset => asset.id && !document.getElementById(asset.id));
+  /*
+   * Load each asset in order, as they may depend upon an earlier loaded script.
+   * Stylesheets and Inline Scripts will resolve immediately upon insertion.
+   */
 
-    for (const newAsset of newAssets) {
-      await loadAsset(newAsset);
-    }
+  for (const newAsset of newAssets) {
+    await loadAsset(newAsset);
   }
-
-};
-/* harmony default export */ var store_controls = (controls);
-//# sourceMappingURL=controls.js.map
+}
+//# sourceMappingURL=load-assets.js.map
 ;// CONCATENATED MODULE: ./packages/block-directory/build-module/store/utils/get-plugin-url.js
 /**
  * Get the plugin's direct API link out of a block-directory response.
@@ -474,7 +475,6 @@ function getPluginUrl(block) {
 /**
  * WordPress dependencies
  */
-
 
 
 
@@ -525,54 +525,57 @@ function receiveDownloadableBlocks(downloadableBlocks, filterValue) {
  * @return {boolean} Whether the block was successfully installed & loaded.
  */
 
-function* installBlockType(block) {
+const installBlockType = block => async _ref => {
+  let {
+    registry,
+    dispatch
+  } = _ref;
   const {
-    id,
-    assets
+    id
   } = block;
   let success = false;
-  yield clearErrorNotice(id);
+  dispatch.clearErrorNotice(id);
 
   try {
-    yield setIsInstalling(block.id, true); // If we have a wp:plugin link, the plugin is installed but inactive.
+    dispatch.setIsInstalling(id, true); // If we have a wp:plugin link, the plugin is installed but inactive.
 
     const url = getPluginUrl(block);
     let links = {};
 
     if (url) {
-      yield (0,external_wp_dataControls_namespaceObject.apiFetch)({
+      await external_wp_apiFetch_default()({
+        method: 'PUT',
         url,
         data: {
           status: 'active'
-        },
-        method: 'PUT'
+        }
       });
     } else {
-      const response = yield (0,external_wp_dataControls_namespaceObject.apiFetch)({
+      const response = await external_wp_apiFetch_default()({
+        method: 'POST',
         path: 'wp/v2/plugins',
         data: {
-          slug: block.id,
+          slug: id,
           status: 'active'
-        },
-        method: 'POST'
+        }
       }); // Add the `self` link for newly-installed blocks.
 
       links = response._links;
     }
 
-    yield addInstalledBlockType({ ...block,
+    dispatch.addInstalledBlockType({ ...block,
       links: { ...block.links,
         ...links
       }
     });
-    yield loadAssets(assets);
-    const registeredBlocks = yield external_wp_data_namespaceObject.controls.select(external_wp_blocks_namespaceObject.store, 'getBlockTypes');
+    await loadAssets();
+    const registeredBlocks = registry.select(external_wp_blocks_namespaceObject.store).getBlockTypes();
 
     if (!registeredBlocks.some(i => i.name === block.name)) {
       throw new Error((0,external_wp_i18n_namespaceObject.__)('Error registering block. Try reloading the page.'));
     }
 
-    yield external_wp_data_namespaceObject.controls.dispatch(external_wp_notices_namespaceObject.store, 'createInfoNotice', (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s is the block title.
+    registry.dispatch(external_wp_notices_namespaceObject.store).createInfoNotice((0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s is the block title.
     (0,external_wp_i18n_namespaceObject.__)('Block %s installed and added.'), block.title), {
       speak: true,
       type: 'snackbar'
@@ -594,40 +597,46 @@ function* installBlockType(block) {
       message = fatalAPIErrors[error.code];
     }
 
-    yield setErrorNotice(id, message, isFatal);
-    yield external_wp_data_namespaceObject.controls.dispatch(external_wp_notices_namespaceObject.store, 'createErrorNotice', message, {
+    dispatch.setErrorNotice(id, message, isFatal);
+    registry.dispatch(external_wp_notices_namespaceObject.store).createErrorNotice(message, {
       speak: true,
       isDismissible: true
     });
   }
 
-  yield setIsInstalling(block.id, false);
+  dispatch.setIsInstalling(id, false);
   return success;
-}
+};
 /**
  * Action triggered to uninstall a block plugin.
  *
  * @param {Object} block The blockType object.
  */
 
-function* uninstallBlockType(block) {
+const uninstallBlockType = block => async _ref2 => {
+  let {
+    registry,
+    dispatch
+  } = _ref2;
+
   try {
-    yield (0,external_wp_dataControls_namespaceObject.apiFetch)({
-      url: getPluginUrl(block),
+    const url = getPluginUrl(block);
+    await external_wp_apiFetch_default()({
+      method: 'PUT',
+      url,
       data: {
         status: 'inactive'
-      },
-      method: 'PUT'
+      }
     });
-    yield (0,external_wp_dataControls_namespaceObject.apiFetch)({
-      url: getPluginUrl(block),
-      method: 'DELETE'
+    await external_wp_apiFetch_default()({
+      method: 'DELETE',
+      url
     });
-    yield removeInstalledBlockType(block);
+    dispatch.removeInstalledBlockType(block);
   } catch (error) {
-    yield external_wp_data_namespaceObject.controls.dispatch(external_wp_notices_namespaceObject.store, 'createErrorNotice', error.message || (0,external_wp_i18n_namespaceObject.__)('An error occurred.'));
+    registry.dispatch(external_wp_notices_namespaceObject.store).createErrorNotice(error.message || (0,external_wp_i18n_namespaceObject.__)('An error occurred.'));
   }
-}
+};
 /**
  * Returns an action object used to add a block type to the "newly installed"
  * tracking list.
@@ -684,7 +693,8 @@ function setIsInstalling(blockId, isInstalling) {
  * @return {Object} Action object.
  */
 
-function setErrorNotice(blockId, message, isFatal = false) {
+function setErrorNotice(blockId, message) {
+  let isFatal = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   return {
     type: 'SET_ERROR_NOTICE',
     blockId,
@@ -722,36 +732,33 @@ function clearErrorNotice(blockId) {
  */
 
 
-/* harmony default export */ var resolvers = ({
-  *getDownloadableBlocks(filterValue) {
-    if (!filterValue) {
-      return;
-    }
+const resolvers_getDownloadableBlocks = filterValue => async _ref => {
+  let {
+    dispatch
+  } = _ref;
 
-    try {
-      yield fetchDownloadableBlocks(filterValue);
-      const results = yield (0,external_wp_dataControls_namespaceObject.apiFetch)({
-        path: `wp/v2/block-directory/search?term=${filterValue}`
-      });
-      const blocks = results.map(result => (0,external_lodash_namespaceObject.mapKeys)(result, (value, key) => {
-        return (0,external_lodash_namespaceObject.camelCase)(key);
-      }));
-      yield receiveDownloadableBlocks(blocks, filterValue);
-    } catch (error) {}
+  if (!filterValue) {
+    return;
   }
 
-});
+  try {
+    dispatch(fetchDownloadableBlocks(filterValue));
+    const results = await external_wp_apiFetch_default()({
+      path: `wp/v2/block-directory/search?term=${filterValue}`
+    });
+    const blocks = results.map(result => (0,external_lodash_namespaceObject.mapKeys)(result, (value, key) => (0,external_lodash_namespaceObject.camelCase)(key)));
+    dispatch(receiveDownloadableBlocks(blocks, filterValue));
+  } catch {}
+};
 //# sourceMappingURL=resolvers.js.map
 ;// CONCATENATED MODULE: ./packages/block-directory/build-module/store/index.js
 /**
  * WordPress dependencies
  */
 
-
 /**
  * Internal dependencies
  */
-
 
 
 
@@ -774,10 +781,8 @@ const storeConfig = {
   reducer: reducer,
   selectors: selectors_namespaceObject,
   actions: actions_namespaceObject,
-  controls: { ...external_wp_dataControls_namespaceObject.controls,
-    ...store_controls
-  },
-  resolvers: resolvers
+  resolvers: resolvers_namespaceObject,
+  __experimentalUseThunks: true
 };
 /**
  * Store definition for the block directory namespace.
@@ -869,11 +874,12 @@ var external_wp_htmlEntities_namespaceObject = window["wp"]["htmlEntities"];
  * @return {JSX.Element}  Icon component
  */
 
-function Icon({
-  icon,
-  size = 24,
-  ...props
-}) {
+function Icon(_ref) {
+  let {
+    icon,
+    size = 24,
+    ...props
+  } = _ref;
   return (0,external_wp_element_namespaceObject.cloneElement)(icon, {
     width: size,
     height: size,
@@ -946,9 +952,10 @@ const starEmpty = (0,external_wp_element_namespaceObject.createElement)(external
 
 
 
-function Stars({
-  rating
-}) {
+function Stars(_ref) {
+  let {
+    rating
+  } = _ref;
   const stars = Math.round(rating / 0.5) * 0.5;
   const fullStarCount = Math.floor(rating);
   const halfStarCount = Math.ceil(rating - fullStarCount);
@@ -984,13 +991,16 @@ function Stars({
  * Internal dependencies
  */
 
-const BlockRatings = ({
-  rating
-}) => (0,external_wp_element_namespaceObject.createElement)("span", {
-  className: "block-directory-block-ratings"
-}, (0,external_wp_element_namespaceObject.createElement)(stars, {
-  rating: rating
-}));
+const BlockRatings = _ref => {
+  let {
+    rating
+  } = _ref;
+  return (0,external_wp_element_namespaceObject.createElement)("span", {
+    className: "block-directory-block-ratings"
+  }, (0,external_wp_element_namespaceObject.createElement)(stars, {
+    rating: rating
+  }));
+};
 /* harmony default export */ var block_ratings = (BlockRatings);
 //# sourceMappingURL=index.js.map
 ;// CONCATENATED MODULE: ./packages/block-directory/build-module/components/downloadable-block-icon/index.js
@@ -1001,9 +1011,10 @@ const BlockRatings = ({
  */
 
 
-function DownloadableBlockIcon({
-  icon
-}) {
+function DownloadableBlockIcon(_ref) {
+  let {
+    icon
+  } = _ref;
   const className = 'block-directory-downloadable-block-icon';
   return icon.match(/\.(jpeg|jpg|gif|png|svg)(?:\?.*)?$/) !== null ? (0,external_wp_element_namespaceObject.createElement)("img", {
     className: className,
@@ -1031,9 +1042,10 @@ function DownloadableBlockIcon({
  */
 
 
-const DownloadableBlockNotice = ({
-  block
-}) => {
+const DownloadableBlockNotice = _ref => {
+  let {
+    block
+  } = _ref;
   const errorNotice = (0,external_wp_data_namespaceObject.useSelect)(select => select(store).getErrorNoticeForBlock(block.id), [block]);
 
   if (!errorNotice) {
@@ -1070,15 +1082,17 @@ const DownloadableBlockNotice = ({
 
  // Return the appropriate block item label, given the block data and status.
 
-function getDownloadableBlockLabel({
-  title,
-  rating,
-  ratingCount
-}, {
-  hasNotice,
-  isInstalled,
-  isInstalling
-}) {
+function getDownloadableBlockLabel(_ref, _ref2) {
+  let {
+    title,
+    rating,
+    ratingCount
+  } = _ref;
+  let {
+    hasNotice,
+    isInstalled,
+    isInstalling
+  } = _ref2;
   const stars = Math.round(rating / 0.5) * 0.5;
 
   if (!isInstalled && hasNotice) {
@@ -1107,11 +1121,12 @@ function getDownloadableBlockLabel({
   (0,external_wp_i18n_namespaceObject._n)('Install %1$s. %2$s stars with %3$s review.', 'Install %1$s. %2$s stars with %3$s reviews.', ratingCount), (0,external_wp_htmlEntities_namespaceObject.decodeEntities)(title), stars, ratingCount);
 }
 
-function DownloadableBlockListItem({
-  composite,
-  item,
-  onClick
-}) {
+function DownloadableBlockListItem(_ref3) {
+  let {
+    composite,
+    item,
+    onClick
+  } = _ref3;
   const {
     author,
     description,
@@ -1215,11 +1230,12 @@ function DownloadableBlockListItem({
 
 
 
-function DownloadableBlocksList({
-  items,
-  onHover = external_lodash_namespaceObject.noop,
-  onSelect
-}) {
+function DownloadableBlocksList(_ref) {
+  let {
+    items,
+    onHover = external_lodash_namespaceObject.noop,
+    onSelect
+  } = _ref;
   const composite = (0,external_wp_components_namespaceObject.__unstableUseCompositeState)();
   const {
     installBlockType
@@ -1273,11 +1289,12 @@ var external_wp_a11y_namespaceObject = window["wp"]["a11y"];
 
 
 
-function DownloadableBlocksInserterPanel({
-  children,
-  downloadableItems,
-  hasLocalBlocks
-}) {
+function DownloadableBlocksInserterPanel(_ref) {
+  let {
+    children,
+    downloadableItems,
+    hasLocalBlocks
+  } = _ref;
   const count = downloadableItems.length;
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     (0,external_wp_a11y_namespaceObject.speak)((0,external_wp_i18n_namespaceObject.sprintf)(
@@ -1357,15 +1374,17 @@ function DownloadableBlocksNoResults() {
 
 
 
-function DownloadableBlocksPanel({
-  downloadableItems,
-  onSelect,
-  onHover,
-  hasLocalBlocks,
-  hasPermission,
-  isLoading,
-  isTyping
-}) {
+function DownloadableBlocksPanel(_ref) {
+  let {
+    downloadableItems,
+    onSelect,
+    onHover,
+    hasLocalBlocks,
+    hasPermission,
+    isLoading,
+    isTyping
+  } = _ref;
+
   if (typeof hasPermission === 'undefined' || isLoading || isTyping) {
     return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, hasPermission && !hasLocalBlocks && (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, (0,external_wp_element_namespaceObject.createElement)("p", {
       className: "block-directory-downloadable-blocks-panel__no-local"
@@ -1394,10 +1413,11 @@ function DownloadableBlocksPanel({
   })) : !hasLocalBlocks && (0,external_wp_element_namespaceObject.createElement)(no_results, null);
 }
 
-/* harmony default export */ var downloadable_blocks_panel = ((0,external_wp_compose_namespaceObject.compose)([(0,external_wp_data_namespaceObject.withSelect)((select, {
-  filterValue,
-  rootClientId = null
-}) => {
+/* harmony default export */ var downloadable_blocks_panel = ((0,external_wp_compose_namespaceObject.compose)([(0,external_wp_data_namespaceObject.withSelect)((select, _ref2) => {
+  let {
+    filterValue,
+    rootClientId = null
+  } = _ref2;
   const {
     getDownloadableBlocks,
     isRequestingDownloadableBlocks
@@ -1442,13 +1462,15 @@ function DownloadableBlocksPanel({
 function InserterMenuDownloadableBlocksPanel() {
   const [debouncedFilterValue, setFilterValue] = (0,external_wp_element_namespaceObject.useState)('');
   const debouncedSetFilterValue = (0,external_lodash_namespaceObject.debounce)(setFilterValue, 400);
-  return (0,external_wp_element_namespaceObject.createElement)(external_wp_blockEditor_namespaceObject.__unstableInserterMenuExtension, null, ({
-    onSelect,
-    onHover,
-    filterValue,
-    hasItems,
-    rootClientId
-  }) => {
+  return (0,external_wp_element_namespaceObject.createElement)(external_wp_blockEditor_namespaceObject.__unstableInserterMenuExtension, null, _ref => {
+    let {
+      onSelect,
+      onHover,
+      filterValue,
+      hasItems,
+      rootClientId
+    } = _ref;
+
     if (debouncedFilterValue !== filterValue) {
       debouncedSetFilterValue(filterValue);
     }
@@ -1484,35 +1506,40 @@ var external_wp_editPost_namespaceObject = window["wp"]["editPost"];
  */
 
 
-function CompactList({
-  items
-}) {
+function CompactList(_ref) {
+  let {
+    items
+  } = _ref;
+
   if (!items.length) {
     return null;
   }
 
   return (0,external_wp_element_namespaceObject.createElement)("ul", {
     className: "block-directory-compact-list"
-  }, items.map(({
-    icon,
-    id,
-    title,
-    author
-  }) => (0,external_wp_element_namespaceObject.createElement)("li", {
-    key: id,
-    className: "block-directory-compact-list__item"
-  }, (0,external_wp_element_namespaceObject.createElement)(downloadable_block_icon, {
-    icon: icon,
-    title: title
-  }), (0,external_wp_element_namespaceObject.createElement)("div", {
-    className: "block-directory-compact-list__item-details"
-  }, (0,external_wp_element_namespaceObject.createElement)("div", {
-    className: "block-directory-compact-list__item-title"
-  }, title), (0,external_wp_element_namespaceObject.createElement)("div", {
-    className: "block-directory-compact-list__item-author"
-  }, (0,external_wp_i18n_namespaceObject.sprintf)(
-  /* translators: %s: Name of the block author. */
-  (0,external_wp_i18n_namespaceObject.__)('By %s'), author))))));
+  }, items.map(_ref2 => {
+    let {
+      icon,
+      id,
+      title,
+      author
+    } = _ref2;
+    return (0,external_wp_element_namespaceObject.createElement)("li", {
+      key: id,
+      className: "block-directory-compact-list__item"
+    }, (0,external_wp_element_namespaceObject.createElement)(downloadable_block_icon, {
+      icon: icon,
+      title: title
+    }), (0,external_wp_element_namespaceObject.createElement)("div", {
+      className: "block-directory-compact-list__item-details"
+    }, (0,external_wp_element_namespaceObject.createElement)("div", {
+      className: "block-directory-compact-list__item-title"
+    }, title), (0,external_wp_element_namespaceObject.createElement)("div", {
+      className: "block-directory-compact-list__item-author"
+    }, (0,external_wp_i18n_namespaceObject.sprintf)(
+    /* translators: %s: Name of the block author. */
+    (0,external_wp_i18n_namespaceObject.__)('By %s'), author))));
+  }));
 }
 //# sourceMappingURL=index.js.map
 ;// CONCATENATED MODULE: ./packages/block-directory/build-module/plugins/installed-blocks-pre-publish-panel/index.js
@@ -1566,12 +1593,13 @@ function InstalledBlocksPrePublishPanel() {
  */
 
 
-function InstallButton({
-  attributes,
-  block,
-  clientId
-}) {
-  const isInstallingBlock = (0,external_wp_data_namespaceObject.useSelect)(select => select(store).isInstalling(block.id));
+function InstallButton(_ref) {
+  let {
+    attributes,
+    block,
+    clientId
+  } = _ref;
+  const isInstallingBlock = (0,external_wp_data_namespaceObject.useSelect)(select => select(store).isInstalling(block.id), [block.id]);
   const {
     installBlockType
   } = (0,external_wp_data_namespaceObject.useDispatch)(store);
@@ -1584,7 +1612,7 @@ function InstallButton({
         const blockType = (0,external_wp_blocks_namespaceObject.getBlockType)(block.name);
         const [originalBlock] = (0,external_wp_blocks_namespaceObject.parse)(attributes.originalContent);
 
-        if (originalBlock) {
+        if (originalBlock && blockType) {
           replaceBlock(clientId, (0,external_wp_blocks_namespaceObject.createBlock)(blockType.name, originalBlock.attributes, originalBlock.innerBlocks));
         }
       }
@@ -1631,9 +1659,12 @@ const getInstallMissing = OriginalComponent => props => {
     const {
       getDownloadableBlocks
     } = select(store);
-    const blocks = getDownloadableBlocks('block:' + originalName).filter(({
-      name
-    }) => originalName === name);
+    const blocks = getDownloadableBlocks('block:' + originalName).filter(_ref => {
+      let {
+        name
+      } = _ref;
+      return originalName === name;
+    });
     return {
       hasPermission: select(external_wp_coreData_namespaceObject.store).canUser('read', 'block-directory/search'),
       block: blocks.length && blocks[0]
@@ -1649,10 +1680,11 @@ const getInstallMissing = OriginalComponent => props => {
   }));
 };
 
-const ModifiedWarning = ({
-  originalBlock,
-  ...props
-}) => {
+const ModifiedWarning = _ref2 => {
+  let {
+    originalBlock,
+    ...props
+  } = _ref2;
   const {
     originalName,
     originalUndelimitedContent

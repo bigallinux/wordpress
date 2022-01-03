@@ -288,7 +288,8 @@ var memize_default = /*#__PURE__*/__webpack_require__.n(memize);
  * @return {?WPShortcodeMatch} Matched information.
  */
 
-function next(tag, text, index = 0) {
+function next(tag, text) {
+  let index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
   const re = regexp(tag);
   re.lastIndex = index;
   const match = re.exec(text);
@@ -594,6 +595,6 @@ const shortcode = (0,external_lodash_namespaceObject.extend)(function (options) 
 /* harmony default export */ var build_module = (shortcode);
 //# sourceMappingURL=index.js.map
 }();
-(window.wp = window.wp || {}).shortcode = __webpack_exports__.default;
+(window.wp = window.wp || {}).shortcode = __webpack_exports__["default"];
 /******/ })()
 ;

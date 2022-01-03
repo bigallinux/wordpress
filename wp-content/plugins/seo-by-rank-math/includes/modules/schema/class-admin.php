@@ -102,23 +102,8 @@ class Admin extends Base {
 			return;
 		}
 
-		$deps = [
-			'tagify',
-			'wp-core-data',
-			'wp-components',
-			'wp-block-editor',
-			'wp-element',
-			'wp-data',
-			'wp-api-fetch',
-			'wp-media-utils',
-			'site-health',
-			'rank-math-analyzer',
-			'backbone-marionette',
-			'elementor-common-modules',
-		];
-
 		wp_enqueue_style( 'rank-math-elementor-schema', rank_math()->plugin_url() . 'includes/modules/schema/assets/css/schema.css', [], rank_math()->version );
-		wp_enqueue_script( 'rank-math-schema', rank_math()->plugin_url() . 'includes/modules/schema/assets/js/schema-gutenberg.js', $deps, rank_math()->version, true );
+		wp_enqueue_script( 'rank-math-schema', rank_math()->plugin_url() . 'includes/modules/schema/assets/js/schema-gutenberg.js', [ 'rank-math-elementor' ], rank_math()->version, true );
 		$this->enqueue_translation();
 	}
 
@@ -219,7 +204,20 @@ class Admin extends Base {
 
 		$types = [];
 		foreach ( $schemas as $schema ) {
-			$types[] = Helper::sanitize_schema_title( $schema['@type'] );
+			if ( ! is_array( $schema['@type'] ) ) {
+				$types[] = Helper::sanitize_schema_title( $schema['@type'] );
+				continue;
+			}
+
+			$types = array_merge(
+				$types,
+				array_map(
+					function( $type ) {
+						return Helper::sanitize_schema_title( $type );
+					},
+					$schema['@type']
+				)
+			);
 		}
 
 		return implode( ', ', $types );

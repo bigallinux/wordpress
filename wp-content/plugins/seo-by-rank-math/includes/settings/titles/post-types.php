@@ -127,6 +127,22 @@ if ( ( class_exists( 'WooCommerce' ) && 'product' === $post_type ) || ( class_ex
 		]
 	);
 
+} elseif( 'rank_math_locations' === $post_type ) {
+
+	$cmb->add_field(
+		[
+			'id'      => 'pt_' . $post_type . '_default_rich_snippet',
+			'type'    => 'radio_inline',
+			'name'    => esc_html__( 'Schema Type', 'rank-math' ),
+			/* translators: link to title setting screen */
+			'desc'    => __( 'Default rich snippet selected when creating a new location.', 'rank-math' ),
+			'options' => [
+				'off'     => esc_html__( 'None', 'rank-math' ),
+				'LocalBusiness' => esc_html__( 'Local Business', 'rank-math' ),
+			],
+			'default' => $this->do_filter( 'settings/snippet/type', 'LocalBusiness', $post_type ),
+		]
+	);
 } else {
 
 	$cmb->add_field(
@@ -309,6 +325,52 @@ if ( 'attachment' === $post_type ) {
 		]
 	);
 } else {
+	if ( 'post' === $post_type ) {
+		$cmb->add_field(
+			[
+				'id'      => 'pt_' . $post_type . '_slack_enhanced_sharing',
+				'type'    => 'toggle',
+				'name'    => esc_html__( 'Slack Enhanced Sharing', 'rank-math' ),
+				'desc'    => esc_html__( 'When the option is enabled and a post is shared on Slack, additional information will be shown (author name & time to read).', 'rank-math' ),
+				'default' => 'on',
+				'classes' => 'rank-math-advanced-option',
+			]
+		);
+	} elseif ( 'page' === $post_type ) {
+		$cmb->add_field(
+			[
+				'id'      => 'pt_' . $post_type . '_slack_enhanced_sharing',
+				'type'    => 'toggle',
+				'name'    => esc_html__( 'Slack Enhanced Sharing', 'rank-math' ),
+				'desc'    => esc_html__( 'When the option is enabled and a page is shared on Slack, additional information will be shown (time to read).', 'rank-math' ),
+				'default' => 'on',
+				'classes' => 'rank-math-advanced-option',
+			]
+		);
+	} elseif ( 'product' === $post_type ) {
+		$cmb->add_field(
+			[
+				'id'      => 'pt_' . $post_type . '_slack_enhanced_sharing',
+				'type'    => 'toggle',
+				'name'    => esc_html__( 'Slack Enhanced Sharing', 'rank-math' ),
+				'desc'    => esc_html__( 'When the option is enabled and a product is shared on Slack, additional information will be shown (price & availability).', 'rank-math' ),
+				'default' => 'on',
+				'classes' => 'rank-math-advanced-option',
+			]
+		);
+	} elseif ( 'download' === $post_type ) {
+		$cmb->add_field(
+			[
+				'id'      => 'pt_' . $post_type . '_slack_enhanced_sharing',
+				'type'    => 'toggle',
+				'name'    => esc_html__( 'Slack Enhanced Sharing', 'rank-math' ),
+				'desc'    => esc_html__( 'When the option is enabled and a product is shared on Slack, additional information will be shown (price).', 'rank-math' ),
+				'default' => 'on',
+				'classes' => 'rank-math-advanced-option',
+			]
+		);
+	}
+
 	$cmb->add_field(
 		[
 			'id'      => 'pt_' . $post_type . '_add_meta_box',

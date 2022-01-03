@@ -288,6 +288,7 @@ class Installer {
 			'bbpress',
 			'acf',
 			'web-stories',
+			'content-ai',
 		];
 
 		// Role Manager.
@@ -314,6 +315,11 @@ class Installer {
 	 * Add defaults for general options.
 	 */
 	private function create_general_options() {
+		$post_types = Helper::get_accessible_post_types();
+		if ( isset( $post_types['attachment'] ) ) {
+			unset( $post_types['attachment'] );
+		}
+
 		add_option(
 			'rank-math-options-general',
 			$this->do_filter(
@@ -360,8 +366,8 @@ class Installer {
 					'frontend_seo_score'                  => 'off',
 					'frontend_seo_score_post_types'       => [ 'post' ],
 					'frontend_seo_score_position'         => 'top',
-					'frontend_seo_score'                  => 'off',
 					'setup_mode'                          => 'advanced',
+					'content_ai_post_types'               => array_keys( $post_types ),
 				]
 			)
 		);
@@ -425,7 +431,13 @@ class Installer {
 		$post_types = Helper::get_accessible_post_types();
 		array_push( $post_types, 'product', 'web-story' );
 
-		$titles['pt_download_default_rich_snippet'] = 'product';
+		$titles['pt_download_default_rich_snippet']   = 'product';
+		$titles['pt_post_slack_enhanced_sharing']     = 'on';
+		$titles['pt_page_slack_enhanced_sharing']     = 'on';
+		$titles['pt_product_slack_enhanced_sharing']  = 'on';
+		$titles['pt_download_slack_enhanced_sharing'] = 'on';
+		$titles['author_slack_enhanced_sharing']      = 'on';
+
 		foreach ( $post_types as $post_type ) {
 			$defaults = $this->get_post_type_defaults( $post_type );
 
@@ -518,11 +530,12 @@ class Installer {
 		foreach ( $taxonomies as $taxonomy => $object ) {
 			$defaults = $this->get_taxonomy_defaults( $taxonomy );
 
-			$titles[ 'tax_' . $taxonomy . '_title' ]         = '%term% %sep% %sitename%';
-			$titles[ 'tax_' . $taxonomy . '_robots' ]        = $defaults['robots'];
-			$titles[ 'tax_' . $taxonomy . '_add_meta_box' ]  = $defaults['metabox'];
-			$titles[ 'tax_' . $taxonomy . '_custom_robots' ] = $defaults['is_custom'];
-			$titles[ 'tax_' . $taxonomy . '_description' ]   = '%term_description%';
+			$titles[ 'tax_' . $taxonomy . '_title' ]                  = '%term% %sep% %sitename%';
+			$titles[ 'tax_' . $taxonomy . '_robots' ]                 = $defaults['robots'];
+			$titles[ 'tax_' . $taxonomy . '_add_meta_box' ]           = $defaults['metabox'];
+			$titles[ 'tax_' . $taxonomy . '_custom_robots' ]          = $defaults['is_custom'];
+			$titles[ 'tax_' . $taxonomy . '_description' ]            = '%term_description%';
+			$titles[ 'tax_' . $taxonomy . '_slack_enhanced_sharing' ] = 'on';
 
 			$sitemap[ 'tax_' . $taxonomy . '_sitemap' ] = 'category' === $taxonomy ? 'on' : 'off';
 		}
