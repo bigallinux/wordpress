@@ -135,7 +135,7 @@ if ( ! class_exists( 'Astra_Builder_Footer' ) ) {
 
 			$display_footer = get_post_meta( get_the_ID(), 'footer-sml-layout', true );
 
-			$display_footer = apply_filters( 'ast_footer_bar_display', $display_footer );
+			$display_footer = apply_filters( 'astra_footer_bar_display', $display_footer );
 
 			if ( 'disabled' !== $display_footer ) {
 
@@ -233,7 +233,7 @@ if ( ! class_exists( 'Astra_Builder_Footer' ) ) {
 						$content = str_replace( '[copyright]', '&copy;', $content );
 						$content = str_replace( '[current_year]', gmdate( 'Y' ), $content );
 						$content = str_replace( '[site_title]', get_bloginfo( 'name' ), $content );
-						$content = str_replace( '[theme_author]', '<a href=" ' . esc_url( $theme_author['theme_author_url'] ) . '" rel="nofollow noopener" target="_blank">' . $theme_author['theme_name'] . '</a>', $content );
+						$content = str_replace( '[theme_author]', '<a href="' . esc_url( $theme_author['theme_author_url'] ) . '" rel="nofollow noopener" target="_blank">' . $theme_author['theme_name'] . '</a>', $content );
 						echo do_shortcode( wpautop( $content ) );
 				echo '</div>';
 			}

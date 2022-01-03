@@ -328,7 +328,7 @@ var astraTriggerEvent = function astraTriggerEvent( el, typeArg ) {
 
 			// Close Popup on # link click inside Popup.
 			for ( link = 0, len = popupLinks.length; link < len; link++ ) {
-				if( null !== popupLinks[link].getAttribute("href") && '#' == popupLinks[link].getAttribute("href") && !popupLinks[link].parentElement.classList.contains('menu-item-has-children')){
+				if( null !== popupLinks[link].getAttribute("href") && popupLinks[link].getAttribute("href").startsWith('#') && ( ! popupLinks[link].parentElement.classList.contains('menu-item-has-children') || ( popupLinks[link].parentElement.classList.contains('menu-item-has-children') && document.querySelector('header.site-header').classList.contains('ast-builder-menu-toggle-icon') ) ) ){
 					popupLinks[link].addEventListener( 'click', triggerToggleClose, true );
 					popupLinks[link].headerType = 'off-canvas';
 				}
@@ -344,7 +344,7 @@ var astraTriggerEvent = function astraTriggerEvent( el, typeArg ) {
 			if( mobileDropdownContent ) {
 				var mobileLinks = mobileDropdownContent.getElementsByTagName('a');
 				for ( link = 0, len = mobileLinks.length; link < len; link++ ) {
-					if( null !== mobileLinks[link].getAttribute("href") && '#' == mobileLinks[link].getAttribute("href") && !mobileLinks[link].parentElement.classList.contains('menu-item-has-children') ){
+					if( null !== mobileLinks[link].getAttribute("href") && mobileLinks[link].getAttribute("href").startsWith('#') && ( !mobileLinks[link].parentElement.classList.contains('menu-item-has-children') || ( mobileLinks[link].parentElement.classList.contains('menu-item-has-children') && document.querySelector('header.site-header').classList.contains('ast-builder-menu-toggle-icon') ) ) ){
 						mobileLinks[link].addEventListener( 'click', triggerToggleClose, true );
 						mobileLinks[link].headerType = 'dropdown';
 					}
@@ -470,14 +470,16 @@ var astraTriggerEvent = function astraTriggerEvent( el, typeArg ) {
 		/**
 		 * Navigation Keyboard Navigation.
 		 */
-		var container, count;
+		var containerButton;
+		if ( body.classList.contains('ast-header-break-point') ) {
+			containerButton = document.getElementById( 'ast-mobile-header' );
+		} else {
+			containerButton = document.getElementById( 'ast-desktop-header' );
+		}
 
-		container = document.querySelectorAll( '.navigation-accessibility' );
-
-		for ( count = 0; count <= container.length - 1; count++ ) {
-			if ( container[count] ) {
-				navigation_accessibility( container[count] );
-			}
+		if( null !== containerButton ) {
+			var containerMenu = containerButton.querySelector( '.navigation-accessibility' );
+			navigation_accessibility( containerMenu, containerButton );
 		}
 	});
 
@@ -795,20 +797,18 @@ var astraTriggerEvent = function astraTriggerEvent( el, typeArg ) {
 	/**
 	 * Navigation Keyboard Navigation.
 	 */
-	function navigation_accessibility( container ) {
-		if ( ! container ) {
+	function navigation_accessibility( containerMenu, containerButton ) {
+		if ( ! containerMenu || ! containerButton ) {
 			return;
 		}
-
-		var button = container.getElementsByTagName( 'button' )[0];
+		var button = containerButton.getElementsByTagName( 'button' )[0];
 		if ( 'undefined' === typeof button ) {
-			button = container.getElementsByTagName( 'a' )[0];
+			button = containerButton.getElementsByTagName( 'a' )[0];
 			if ( 'undefined' === typeof button ) {
 				return;
 			}
 		}
-
-		var menu = container.getElementsByTagName( 'ul' )[0];
+		var menu = containerMenu.getElementsByTagName( 'ul' )[0];
 
 		// Hide menu toggle button if menu is empty and return early.
 		if ( 'undefined' === typeof menu ) {
@@ -821,13 +821,28 @@ var astraTriggerEvent = function astraTriggerEvent( el, typeArg ) {
 			menu.className += ' nav-menu';
 		}
 
+		if ( 'off-canvas' === mobileHeaderType ) {
+			var popupClose = document.getElementById( 'menu-toggle-close' );
+			popupClose.onclick = function() {
+				if ( -1 !== containerMenu.className.indexOf( 'toggled' ) ) {
+					containerMenu.className = containerMenu.className.replace( ' toggled', '' );
+					button.setAttribute( 'aria-expanded', 'false' );
+					menu.setAttribute( 'aria-expanded', 'false' );
+				} else {
+					containerMenu.className += ' toggled';
+					button.setAttribute( 'aria-expanded', 'true' );
+					menu.setAttribute( 'aria-expanded', 'true' );
+				}
+			};
+		}
+
 		button.onclick = function() {
-			if ( -1 !== container.className.indexOf( 'toggled' ) ) {
-				container.className = container.className.replace( ' toggled', '' );
+			if ( -1 !== containerMenu.className.indexOf( 'toggled' ) ) {
+				containerMenu.className = containerMenu.className.replace( ' toggled', '' );
 				button.setAttribute( 'aria-expanded', 'false' );
 				menu.setAttribute( 'aria-expanded', 'false' );
 			} else {
-				container.className += ' toggled';
+				containerMenu.className += ' toggled';
 				button.setAttribute( 'aria-expanded', 'true' );
 				menu.setAttribute( 'aria-expanded', 'true' );
 			}

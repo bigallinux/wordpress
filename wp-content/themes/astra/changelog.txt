@@ -1,3 +1,44 @@
+v3.7.6
+- Improvement: Added a new filter 'astra_web_stories_position' to change the position of web stories. ( https://wpastra.com/docs/change-web-stories-position/ )
+- Improvement: Builder - Button - Added typography options from Astra Pro to free theme.
+- Fix: Mobile menu does not close when you click a one page navigation link inside them.
+- Fix: Responsive color options from 'color-group-control' are hiding when trying to set them in responsive devices.
+- Fix: Removed unwanted title and desc tag present for search icon.
+- Fix: WooCommerce Pagination markup misaligned on mobile devices.
+- Fix: Gutenberg separator dots not appearing properly on frontend.
+- Fix: JS console error when Custom Layout is added for header.
+- Fix: Accessibility - Tab navigation does not highlight menu with submenus.
+- Fix: Filter to disable all Meta Settings of Page/Post by default is not working in Gutenberg based metabox. ( https://wpastra.com/docs/disable-all-meta-settings-of-page-post-by-default/ )
+
+v3.7.5
+- Improvement: Added compatibility for Elementor Pro v3.5.0 WooCommerce widgets.
+- Fix: WPForms submit button not inheriting global button text color.
+- Fix: 'Disable Below Header' option is not visible in Astra meta settings.
+- Fix: LearnDash - Astra meta settings are not getting saved for the course page.
+
+v3.7.4
+- New: Breadcrumb compatibility with SEOPress plugin. ( https://wpastra.com/docs/add-breadcrumbs-with-astra/#support-for-third-party-plugins )
+- Improvement: Gutenberg editor core blocks UI/UX improvement. ( https://wpastra.com/docs/gutenberg-ui-improvements-with-astra/ )
+- Improvement: Code refactor – Some filters, functions, hooks are deprecated and replaced with astra_ prefix NamingConvention. ( https://wpastra.com/docs/deprecated-astra-hooks/ )
+- Improvement: Gutenberg frontend blocks UI improvement. ( https://wpastra.com/docs/gutenberg-ui-improvements-with-astra/ )
+- Improvement: Global – Typography – Heading presets value should also retain in H1 to H6.
+- Improvement: Moved Astra meta settings into a separate Gutenberg sidebar panel. ( https://wpastra.com/astra-3-7-4/ )
+- Fix: W3 validation - Getting duplicate H1 tag for site-title.
+- Fix: W3 validation - Duplicate HTML id '#site-navigation' if there are multiple menus on a single page.
+- Fix: W3 validation - CSS parse error for '.menu-link' & '.wp-block-button__link'.
+- Fix: W3 validation - Duplicate ID: '#ast-hf-mobile-menu'. This change may break CSS if you have used custom CSS on '#ast-hf-mobile-menu' HTML ID.
+- Fix: W3 validation - Duplicate ID: '#Layer_1'. This change may break CSS if you have used custom CSS on '#Layer_1' HTML ID.
+- Fix: Gutenberg Editor content area showing white background color when Full-screen mode is active.
+- Fix: Color picker tooltip appears on hover of selection area & its palette.
+- Fix: The default "Add Widget" text alignment issue in the header.
+- Fix: Image and Text blocks alignment not working properly with Image size - Medium in the editor.
+- Fix: Alignwide blocks getting horizontal scrollbar on tablet breakpoint & 1400px between devices. (Props - https://github.com/ZebulanStanphill)
+- Fix: Inner container Gutenberg block's content width not affected by "Container Width" option. (Props - https://github.com/ZebulanStanphill)
+- Fix: Gutenberg - Font weight for the heading typography is appearing differently on the editor and frontend.
+- Fix: WooCommerce - Broken grid layout on mobile view for products shortcode.
+- Fix: Title is misaligned in Gutenberg editor when the Gutenberg plugin v11.4.1 and above is active.
+- Fix: The hamburger button is not changing its aria-expanded attribute to true on expanding.
+
 v3.7.3
 - Fix: Builder - Offcanvas content directly visible on frontend even 'Toggle Button' component is not added in builder area.
 - Fix: Full Size & Wide Size block layout options missing from core/image block.

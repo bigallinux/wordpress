@@ -3,13 +3,33 @@
 
 /*= Menu principal ============ */
 
-/** Menu principal >> #post-22 .uagb-rm__title-wrap **/
-#post-22 .uagb-rm__title-wrap {
-	width: 270px !important;
+/** Menu principal >> .uagb-block-bd85be22 .uagb-ifb-title-prefix **/
+.uagb-block-bd85be22 .uagb-ifb-title-prefix {
+	text-shadow: 5px 5px rgb(0, 0, 0) !important;
 }
 
-/** Menu principal >> #post-22 .uagb-rm__price **/
-#post-22 .uagb-rm__price {
-	width: 120px !important;
+/** Menu principal >> .uagb-block-bd85be22 path **/
+.uagb-block-bd85be22 path {
+	text-shadow: 0 0 rgb(0, 0, 0) !important;
+}
+
+/** Menu principal >> .uagb-block-bd85be22 svg **/
+.uagb-block-bd85be22 svg {
+	
+}
+
+/** Menu principal >> #colophon .widget-title **/
+#colophon .widget-title {
+	color: rgb(221, 153, 51) !important;
+}
+
+/** Menu principal >> #astra-widget-address-3 .address-meta **/
+#astra-widget-address-3 .address-meta {
+	color: rgb(255, 255, 255) !important;
+}
+
+/** Menu principal >> #astra-widget-address-3 .address-icons **/
+#astra-widget-address-3 .address-icons {
+	color: rgb(255, 255, 255) !important;
 }
 
